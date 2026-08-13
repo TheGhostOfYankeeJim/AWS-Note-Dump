@@ -66,6 +66,35 @@ Can set users to change their passwords after x time.
 Can stop password reuse
 (this is like AD)
 
+## IAM Roles for Services
+Like a scanning service in AD. 
+IAM ROLE is like a user but used by AWS services. 
+IAM ROLE == my Nessus scanning service. 
+Common roles: 
+    - EC2 Roles
+    - Lambda Fuctions
+    - CloudFormation
+
+## IAM Sec Tools
+IAM Cred Report
+    - lists all your accounts users and status of their creds
+This is like pulling AD member fields (Last password set, when forced reset, etc)
+
+
+# IAM Access Advisor
+This is a good oppurtunity to see what service permissions are attached to which users
+When they were last used
+This is a good method for apply the principale of least privilege. 
+
+# IAM Best Practices
+Try to not use the Root account, use newly created accounts with least privilege in mind
+One IRL user = one AWS user
+Assign permissions to groups, then add users to groups. 
+USE MFA, use it!
+Create roles for giving permissions to AWS services. 
+Get into a habit of auditing your IAM Creds and Access Advisor
+NEVER SHARE AWS ACCESS KEYS
+
 # Multifactor
 At a bare min, your ROOT account should have MFA, ideally all of your users should too.
 
@@ -80,3 +109,36 @@ Hardware Key Fob Device (RSA keyfobs that generate the code on the device)
 AWS GovCloud (key fob as well ((Surpass)))
 
 ## AWS Access Keys, CLI, SDK 
+
+Three ways to access. 
+
+First is the AWS Management console: password//MFA protected
+CLI - Access Key protected
+SDK (Like boto3, apis, etc) - protected by access keys
+    - https://github.com/aws/aws-sdk-net
+
+Users manage their own Access keys, treat like a password don't share them. 
+
+When you create an access key you only get one oppurtunity to save the creds. 
+
+Once you have your creds:
+
+```aws configure ```
+
+It'll ask for the cred info at this point. Then your ready to go. 
+
+## Cloudshell
+Its like the Azure CLI in the web browser. 
+Not in every region though. But all this is the terminal via browser.
+Its the same thing I used to set up NPK for cracking. 
+(uses the user your currently logged in as)
+
+The neat thing is all the files you create with your cloudshell environment will continue to exist. Even after closing the browswer, losing your session, etc. 
+
+Can upload and download files, might be able to use this as a junky C2 channel. 
+
+## Note to Self
+
+Take some time to set up the Service Role for EC2
+
+Review what is used inside an IAM Policy, I can't ever remember what specifically can be found in an IAM policy. 
