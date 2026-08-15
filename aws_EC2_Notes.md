@@ -236,6 +236,37 @@ If you need a public IP on your EC2 Instance to never change you'll use an Elast
 
 By default you can only have 5 elastic IP addresses, but you can request more through support (Like how I increased my spot instance requests for NPK)
 
-Pricing you get changed per hourly use and ideal. Roughly $3.5 a month
+Pricing you get changed per hourly use and ideal. Roughly $3.5 a month 
+
+YOU NEED TO RELEASE THE PUBLIC IP ADDRESS TO STOP GETTING CHARGED FOR IT. 
 
 ### EC2 Placement Groups
+When you create a placement group you have three options
+Cluster - Instances are grouped together in a single AZ
+Spread - spread across differnt hardward max 7 instances per group per AZ)
+Partion - spread across of partitions, amounts different sets of racks. LIke a real server rack. So this helps reduce a rack failure. Big data apps HDFS, HBASE, etc.
+
+With Spread: This is ensuring failure endurance. So if AZ group fails the others won't be effected. 
+
+## ENI Elastic Network Interfaces
+logical commpentent in VPC that reps a virtual network card
+ENI primary private IPV4 and one more 2nd dary IPv4. 
+Can have pne Elastic IP per private IPv4
+One Public IPv4
+One or more sec groups
+Mac Address
+
+Can attached them on the fly, but bound to specific AZs
+
+So like if you want to move over one private IP to a different EC2 instance for fail over protections. 
+
+## EC2 Hibernate
+Stop - Data on disk is kept intact
+Terminate -- bye bye everything
+When you start - its a fresh boot
+
+EC2 Hibernate 
+Saves what was in memory. 
+Which makes the boot much faster. 
+Whatever was in memory is written to file in the root EBS volume
+Root EBS volume has to be encrypted
