@@ -8,6 +8,7 @@ VMs in the cloud,
 Storing data on virtual drives (Elastic Block Storage - EBS)
 Breaking load across a bunch of machine (Elastic Load Balancing - ELB)
 Scaling using auto-scaling group (ASG)
+EC2 Instances are also bound to one AZ.
 
 "Rent compute on demand."
 
