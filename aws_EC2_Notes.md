@@ -94,4 +94,148 @@ Best practice is to maintain one security group for SSH
 If app times out --> security group issues
 BUT, if you app gives connection refused, its an app error or it never launched. (First means the traffic never made it to the app like an external firewall, the 2nd means it did but the app itself failed for some reason)
 
+Out of the gate, all inbound is blocked, all outbound is authorized. 
 
+Can have IPV4 and IPV6 rules. 
+
+## Security Groups Referencing 
+You can reference security groups in other groups. 
+i.e. you have 3 sec groups.
+So you can say okay my EC2 instance has a security group that allows groups 1 and 2 to have unmitigated access. Group 1 and 2 would access it but group 3 won't. This way you don't have to hard code names or IP address, just refernce the groups. 
+
+## General ports to know
+22 - ssh
+21 - FTP
+22 - SFTP
+80/443 (web stuff duh)
+3389 (windows RDP)
+
+
+## how to connect 
+Linux just use SSH (you've done this 1000 times before)
+Can use .pem files for ease just don't lose control over them lol
+You cna use EC2 Instance connect (web based ssh connection)
+A lot of the amazon basic images use the ec2-user as a default starting user.
+
+You'll need to change the permissions of your pem key, generally its too open to start with. 
+
+``` chmod 400 ```
+
+``` ssh ec2-user@<publicIP> -i <nameOfPEMFile> ```
+
+With windows 10, essentially the same way as linux. 
+.ppk file is for putty only
+
+``` ssh -i <pemfile> ec2-user@<public ip>```
+
+## EC2 Instance Connect
+Browser Based SSH instance (you've seen this in Azure//Digital Ocean for trouble shooting)
+ideal if you don't want to manage ssh keys. This could be useful if your on a test that doesn't allow SSH/Putty, etc but allows HTTPs outbound. This will all look like HTTPs traffic from Amazon. 
+
+## EC2 Instance Roles
+You could add AWK Keys to the EC2 instance but thats super dangerous. 
+
+So lets say you want to on a EC2 to list IAM users, you could attached an IAM role to the EC2 to give it this specific permissions. 
+
+That way you never need to have creds just chilling on the machine for an attacker to get. This would be useful for adding troubleshooting looked up policies onto the machine. 
+
+## EC2 Purchasing Options
+On Demand Instance - Short workload, predict price, pay by second
+Reserved 
+    - 1 to 3 years 
+    - Can do Convertible Reserved Instances (Long workloads with flexible instances)
+Savings Plan
+    - 1 to 3 years
+    - Commit to a amount of usage
+
+Spot instances
+    - Short cheap workloads
+    - Can lose instance
+    - This is the same thing you use in NPK with GSpot instances
+
+Dedicated Hosts 
+    - Book a whole physical server
+
+Dedicated Instance
+    - No other Customers share your hardware (This is confusing) I think it means you share the server but have dedicated hardware for you. 
+
+Capacity Reservations
+    - Reserve capacity in specific AZ for a duration of time
+
+### EC2 On Demand
+Pay for what you use. 
+Linux and Windows, per second after first minutes billing
+Other OS bill per hour
+Highest Cost, no upfront payment
+No longterm commit
+Best Usage:
+    - Short term un-interrupted workloads
+
+### EC2 Reserved Instance
+72% dicount compared to On-Demand
+Reserve specific instance attributes (Type, Region, Tenancy, OS)
+Reserve Period == 1 year basic discount or 3 years larger discount. 
+Payment Options - No Upfront, Partial, and Full. All upfront gives you maxiumum discounts.
+Can buy or sell Reserved Instances in Market Place 
+Best Usage:
+    - Steady State Usage Apps (Databases)
+
+### Convertible Reserved Instance
+You can changes the type, instance, OS, scope, and tenancy
+but only get up to a 66% discount
+
+### EC2 Savings Plans
+
+### Spot Instance
+90% reduction compared to On-demand
+You can LOSE these instances if your max prices is less then the current spot price (NPK bidding for a spot but then you get outbid and lose the spot)
+
+Define Max Spot Price 
+Essentially your bidding for compute. 
+You win the bid if your max spot price is greater than the current spot price
+
+If the current price exceeds your max price, you'll need to stop or terminate your instance within 2 minutes. 
+
+You can do a one-time request or a persistent request
+
+One-time request:
+As soon as its spot request filled, your instance is created. And then the request goes away. 
+
+### Spot Fleets
+Set of spot instances
+will try to meet target capacity with price constraints
+You define possible launch pools
+can have different pools that the fleet can choose
+Spot fleet stops launching instance when reaching capacity or max cost
+
+LowestPrice - Launch from pool with lowest price
+Diversified distributed across all pools
+capacityOptimized - optimized number of instances
+priceCapacityOptimized - start iwth highest capacity and then select pool with lowest price
+
+### EC2 Dedicated Host
+You get your own server
+Mostly for compliance reasons
+Pay per second of resevered (1 or 3 years)
+Most expensive options
+Or a BYOL (bring yoru own liscence)
+
+
+### EC2 Dedicated Instances 
+Instances run on hardware thats dedicated to you
+Can Share hardware with other instances on your account
+No contol for instance placement.
+Own instance on own hardware vs dedicated host which is lower level visibilty over the hardware itself 
+
+## Networking
+IPV4 and IPV6
+IPV4 is most commonly used
+(General college info about the differences)
+
+If you need a public IP on your EC2 Instance to never change you'll use an Elastic IP. It'll remain as long as you don't delete the instance.
+
+By default you can only have 5 elastic IP addresses, but you can request more through support (Like how I increased my spot instance requests for NPK)
+
+Pricing you get changed per hourly use and ideal. Roughly $3.5 a month
+
+### EC2 Placement Groups
