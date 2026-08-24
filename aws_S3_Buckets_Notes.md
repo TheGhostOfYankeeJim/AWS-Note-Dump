@@ -171,3 +171,88 @@ Can co-locate your data and EC2 instances together, use for AI ML, Fin modeling,
 Explicity DENY in an IAM policy will take precendent over a S3 Bucket policy. 
 
 Passed: Missed one question on what policies trump other policies. 
+
+# Moving Between Storage Classes
+
+Transition Actions - Move to IA after 50 days after creation
+
+Expiration Actions - Delete Logs after 365 days 
+
+Apply rules to prefixs 
+Apply rules to object tags 
+
+S3 Analytics can help you detemine what data should go into what storage class. Only works for Standard and Standard IA
+
+Report is updated daily, 
+
+takes 1 to 2 days to start seeing data analysis 
+
+## S3 Requester Pays
+Bucket owners pays for everything usually. 
+
+A lot of heavy files, can enable requester pays. 
+Self explanitory. 
+Must be authenticated inside AWS. 
+
+## S3 Events Notifications
+
+Object creates, destoyed, Replicated, etc 
+Can filter based on extension
+
+And then send them to whatever target you want. 
+Usually in seconds but can take a minute or longer. 
+
+SNS Resource Access Policy - Allows S3 bucket to send messages to SNS. SQS, or Lambda. 
+
+All Events end up in Amazon EventBridge  then can be sent to AWS Services as a desition. 
+
+More advance filtering rules, 
+
+## S3 Baseline Performance
+
+100ms-200ms - 
+3,500 PUT/COPY/POST/DELETE 
+5,500 GET HEAD per prefix in a bucket
+
+No limits to amount of prefixes in your buckets
+
+a prefix is anything past bucket names and before the file name 
+
+Multipart upload - recommended for 100Mb files
+MUST USE for files that are 5GBs
+Can help parallelize uploads
+
+S3 Transfer Acceleration, sends to edge location (200+) which then sends the data to the S3 in the target region
+
+This is compatiable with multi-part upload 
+
+## S3 Byte Range Fetches
+
+Parallelize Gets by byte ranges
+
+Better resilience in case of failures
+
+Can speend up downloads. 
+Header range only request the first 50 bytes. 
+
+## S3 Batch Operations
+
+Bulk operations on pre-existing objects in the bucket. 
+
+Encrypted all unencrypted objects, modify ACLS, add tags, etc. 
+
+You can track progress, make reports, etc. 
+
+## S3 Storage Lens
+Helps you optimize Storage across your AWS Organization
+Discover ANomalies, cost effciences, and apply data protections best practices
+Make or use default dashboard
+Export metrics daily to an S3 Bucket
+
+## Default Dashboard
+Visualised insights, multi-region multi-account
+Can't delete but disable is possible of the default dashboard
+
+Missed one question about S3 and its Athena inegration with a byte range reader. 
+
+# S3 SECURITY 
