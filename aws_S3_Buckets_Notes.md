@@ -256,3 +256,140 @@ Can't delete but disable is possible of the default dashboard
 Missed one question about S3 and its Athena inegration with a byte range reader. 
 
 # S3 SECURITY 
+
+## Encryption 
+Bucket policies are always eval'd before default encryption settings. 
+
+Server Side Encryption
+
+### Server Side Encryption with Amazon S3 Managed Keys - Default option 
+
+Severside encyrption, AES256, Key is owned by AWS
+Set Header "x-amz-server-side-encryption":"AES256"
+Enabled by default for new buckets//objects
+
+
+### Server Side Encryption with KMS Keys stored in AWS KMS (SSE-KMS)
+You want to manage aws keys, so you can actually access the key. 
+"x-amz-server-side-encryption":"aws:kms"
+
+Some limitations:
+Biggest bottleneck will be the API calls. 
+For example you download the files, KMS will use the Decrypt API. Every call counts towards your KMS quota (per second) this varies based on region. You can increase the quote amount bu the Sevice Quotas console. 
+
+### Server-Side Encryption with Customer Proivded Keys 
+Upload File + key
+(Key is managed outside of AWS)
+
+Then AWS uses the key with the file for encryption 
+
+The user must provide the key to decrypt the file. 
+
+
+### Client Side Encryption
+
+You encrypt the data before sending to AWS, and decrypt it after pulling from S3. 
+
+## Encryption in Transit
+SSL/TLS (connection between you and target host is encrypted)
+
+You can force this as a bucket policy. Using 
+
+```
+"effect":"Deny",
+"Principal":"*",
+"Action":"s3:GetObject",
+"Resource": "arn:aws:s3:::bucketname/*",
+"Condition":{
+    "Bool": {
+        "aws:SecureTransport": "false"
+    }
+}
+
+```
+
+## DSSE-KMS
+"double encryption based on KMS"
+
+## CORS (Cross Orgin Resource Sharing)
+
+Orgin == protocol + host + port
+example: https://www.ianscoolsdomain.com 
+
+Browser Based Security
+
+Get images from other server. 
+
+So the web Browser does a preflight request to the cross origin (that has the images)
+
+Get HTTP Verbs from CrossOrigin 
+
+So if a client makes a cross-orgin request to our S3 Bucket
+We need to returned the correct CORS headers
+
+Easy mode: slap a * for all orgins 
+
+## S3 MFA Delete
+Force users to use a generated code before doing important S3 operations. 
+
+- PErm delete an object version
+- Suspend versioning 
+
+To Enable: Versioning must be enabled on the bucket 
+
+Only a bucket owner (root account) can enabled disable this feature. 
+
+Have to enable this via CLI
+
+Once enabled you can only delete files from the CLI 
+
+## S3 Access Logs
+
+Auth or Denied, for any account. 
+
+Target Logging Bucket must be in the same AWS Region
+
+NEVER EVER EVER Set your logging bucket to be the monitored bucket. Its creates a terrible loop that'll grow forever. 
+
+## S3 Pre-Signed URLS
+
+S3 Console - 12 Hours
+AWS CLI - 168 hours
+
+Users given a pre-signed URL inherit the permission of the user that generated for GET/PUT
+
+Like Sharepoint sharing a link to a folder//file. 
+
+
+## S3 Glacier Vault Lock
+Write Once Read Many 
+
+Make a vault lock policy, lock the policy. 
+(you use this for compliance needs.)
+
+S3 Object Lock:
+- versioning must be enabled
+Lock at the object level, not Bucket level.
+
+Compliance Mode: 
+Object Versions can't be overwritten, or deleted by any users, including the root user
+Obects retention modes can't be changed, retention periods can't be shortened. 
+
+Governance Mode:
+Most users can't overwrite or delete objection version or alter lock settings
+Some users have special permissions to change the retention or delete the object. 
+
+
+Legal Hold: Object is protected for ever. 
+
+## S3 Access Points 
+
+Diff groups don't need access to a whole bucket so you can tie groups to an Access Point. (R/W access.)
+
+Can do this for VPC orgin using an VPC Endpoint
+
+## S3 Lambda Objects
+
+Run a bit of code before returning the object to the user
+
+Useful for redactions. Converting data, adding watermarks, etc. 
