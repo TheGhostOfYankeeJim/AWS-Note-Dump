@@ -255,3 +255,9 @@ MEMCACHED
     (IE. This shares chucks of the DB with friends - Sharding)
 
     Got 24/26 questions right. Yay!
+
+
+# More About Databases 
+
+## How to choose the right DB?
+

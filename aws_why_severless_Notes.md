@@ -205,3 +205,111 @@ Integrate with API and ALB
 
 Cognito Identity Pools (federated)
 Can hook into preexisting identity providers
+
+
+# More Serverless Arch Talks
+
+More or less just review the serverless solutions covered here and make sure you understand the finite diffs between them. 
+
+## Amazon RDS
+Managed PostGRES/MYSql/Oracle/SQL Sever/DB2/Maria,Custom
+AutoScaling
+Supports Read Replicas and Multi AZ
+Security through IAM, Sec Groups, KMS, SSL
+Automatic backups (35 days)
+Manual DB snapshot for anything longer
+Managed and Scheduled down times for Maintence
+
+Store Relational Datasets RDBMS / OLTP. 
+
+## Aurora 
+Compat with PostgreSQL / MySQL
+
+data is stored in 6 replicas across 3 AZ
+
+Compute: Cluster of DBs
+Cluster: custom endpoints for writer and reader DB instances
+Same sec, mon, and mait features as RDS
+
+Auro Serverless - unpredicable workloads, no capacity planning
+
+Auro GLobal - Up to 16 DB Read Instances in EACH region, <1 second storage replication
+Auro Machine Learning: Sage Maker and Comprehend
+Auro Database Cloning: New Cluster from existing one, faster then using a snapshot
+
+## Elasticache
+Managed Redis // memchached
+in mem data store
+Select ElastiCache Instance Type
+Support for Clustering (Redis), Multi AZ, read replicas (Sharding)
+Sec through IAM, Sec Groups, KMS, Redis AUth
+Backup/Snapshots
+Managed and Scheduled Maintence
+
+This requires some app code changes. 
+
+## DynamoDB 
+Serverless NoSQL database, millisecond latency 
+Capacity MOdes: Provisioned, AUto-scaling
+
+Can replace Elasticache as a key/value store
+Highly Ava, Multi AZ by Default, read and writes are decoupled
+DAX cluster for read cache
+Sec auth and authorization through IAM
+DynamoDB Streams integrate with LAmbda and Kinesis Data Streams
+
+Global Table Feature: Active Active 
+35 Days PITR, or on-demand backs
+Export to S3, without RCU (export to s3 features)
+Can write to a new table without using RCU
+
+RAPID evolve schemas
+
+## S3 "technically"
+Key value store for objects
+Good for big objects
+50TB object size, versioning
+Bucket Policies, ACL, Access Points, Object Lambda, CORS, vault lock
+Batch operations
+Multipart upload 
+S3 Event Buckets
+
+## DocumentDB
+AWS version of MongoDB (NoSQL)
+Store query and index JSON data
+Fully managed, replicated across 3 AZ
+10GB growth 
+
+Automatically scales to workloads with millions of requests per sec
+
+## Neptune 
+graph database
+
+Social netowr apps are a good example.
+
+15 Read Replicas, 3 AZ replicas
+
+Great for Knowledge graphs, fraud detection, social stuff
+
+Real-time ordered
+Changes are ava immediately after writing
+No Dupes, STRICT order
+Accessible over HTTP Rest API
+
+
+## Keyspaces
+
+Apache Cassandra
+
+Open Source No-SQL distributed database
+
+Uses Cassandra Query Language 
+On-Demand and provisioned mode with auto scaling
+
+Store IOT device info, 
+
+## TimeStream
+
+Time Series Database
+Data points with a point of time related
+Much faster and cheaper then a relationa databases
