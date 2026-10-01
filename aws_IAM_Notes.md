@@ -142,3 +142,5 @@ Can upload and download files, might be able to use this as a junky C2 channel.
 Take some time to set up the Service Role for EC2
 
 Review what is used inside an IAM Policy, I can't ever remember what specifically can be found in an IAM policy. 
+
+# ADVANCE NOTES Section
