@@ -144,3 +144,140 @@ Take some time to set up the Service Role for EC2
 Review what is used inside an IAM Policy, I can't ever remember what specifically can be found in an IAM policy. 
 
 # ADVANCE NOTES Section
+
+## AWS Organizations
+Global Service
+Manage multiple AWS accounts
+
+Big Account == Management Account
+Other accounts == Member Accounts
+
+Billing is consalidated across multiple accounts. 
+
+You get pricing benefits from aggregated usage (volume discounts effectively)
+Shared Reserve instance and Savings Plans discounts across account
+API to automate account creation
+
+OU Root Org boundries
+-> Management account
+Makes other OUs like a DEV boundry and a prod boundry
+
+Enable all CloudTrail on accounts and log them to a centeral S3 
+
+Sec Advantage
+Service Control Policies 
+IAM Policies applied to OU and Accounts to restrict users and roles
+
+## Tag Policies 
+Standarize tags across the AWS Org
+
+Define tag keys and their values and how they're assigned 
+
+Good for cost accounting
+
+Generate a report that lists all tagged and non tagged resources
+
+## Advance Policies 
+
+IAM Conditions 
+
+for example aws:SourceIP 
+Can restict the client IP FROM which the API calls are being made. I.e. only my company IPS can make the request.
+
+Another example:
+ec2:ResourceTag
+restricted based on tags
+
+aws:MultiFactorAuthPresent is another one/ 
+
+asw:PrincipalOrgID only allow member accounts to access the object
+
+
+## Resource Based vs IAM Based
+
+Cross Account:
+attach resource based policy (bucket policy)
+
+Or using a role as a proxy (Assuming a role)
+
+So you loose all your current permissions when you take up a new role. 
+
+When using a resource based policy you never lose your permissions. 
+
+More and more services are getting resource based policies. 
+
+## Policy Eval Logic
+
+IAM permission boundaries
+
+Define max permissions for users and roles. (NO GROUPS)
+
+
+So if you have a user and you go yep you have all the permissions via inline IAM polocies, if they have anything listed that is more restructive in their IAM boundry permissions, thats the "Real" permissions they have.
+
+Example, you make a user a super user, but add a policy boundry that only allows access to lambda well then they only have access to lambda despite being made a super user. 
+
+Idk why you'd ever do this though? 
+
+Effectively if there is a higher level Deny, it denies everything, if its not explicity allowed it's denied. AWS is stupidly secure. 
+
+## AWS IAM Identity Center (Was AWS Signle Sign-On)
+
+One Login for all of the AWS Accounts, Cloud Apps (salesforce), has SAML2.0 apps, EC2 Windows Instances. 
+
+Identity Providers
+Id Store in IAM Identy Center
+Or 3rd party, AD Okta etc
+
+~~This would be usful for hosting AWS pentests. ~~
+
+It essentially logs you into the right AWS console.
+
+## AWS Directory Service
+
+Microsoft AD in AWS essentially
+
+3 Flavors
+
+AWS Managed Microsoft AD
+- create AD in AWS
+- Establish trust connections with your on-prem AD
+- Share users between AWS and On-Prem
+
+AD Connector
+- Directory Gateway (proxy) to redirect the request to on-prem, supports multifactor
+- Users are managed on-prem though
+- 500 Users and 5000 Users max
+
+Simple AD
+- AD compat managed directory ON AWS
+- Can't be joined to an On-PRem AD
+
+IAM Id Center with AD Setup
+AWS Managed integration is out of box, easy mode.
+
+Self-Managed Directory
+Create a Twoway trust between your managed AD and ON-PRem solution
+
+## AWS Control Tower 
+This is for compliance
+
+Automate the setup of your environment
+Detect policy Violations
+Monitor Compliance
+Set up guardrails
+
+## Guardrailes
+Ongoing Governance
+
+Preventative Guardrails using SCP (Service control policies) to all accounts
+
+Restrict Regions, is US only no EU
+
+Detective Guardrail
+- Just notify but don't stop anything
+Like list all untag resources 
+
+Easy peasy, might want to read more docs about resource vs individual poliecies. 
+
+Was a little confused by lambda is a resource based but kenises is a individual. 
