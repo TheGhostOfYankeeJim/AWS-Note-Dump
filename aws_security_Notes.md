@@ -99,3 +99,72 @@ Auto renewal
 
 Integrations with ELV (CLB, ALB, NLB)
 CloudFront Distributions
+
+## CloudHSM
+
+Dedicated Hardware for encyrption but we manage the encryption keys. 
+
+Has FIPS 1 40-2 level 3 complaince
+can do symmetric and asymmetric encryptions
+
+CRUD as an HSM CLuster
+
+CloudHSM Software actually manages the keys. 
+
+MultiAZ replicate one vault to another AZ. 
+
+Can connect this to AWS services by CloudHSM connector to AWS KMS, API calls made through API are logged in CloudTrail.
+
+## AWS WAF
+
+Works on level 7 HTTP
+Deploy it on ALB, Api Gateway, CLoudFront, AppSync GraphQL API, Cognito User Pool 
+
+Web appliation firewall can't bbe deployed on a NLB (duh)
+
+Can define ACLs, like up too 10000 IP addresses per rule
+Filter on headers, bodys, URI strings, ext. 
+Geo-match countries 
+Rate-based rules 
+
+## AWS Sheild
+
+DDOS protection, 
+
+Standard Sheild, syn/udp floods, reflection attacks, other layer 3/4 everyone has this one. 
+
+AWS Advance, $3000 per month per org
+DDOS response team, Protect against higher usage fees
+Ec2, ELB, CloudFront, Gobal Accelerator, and route53 attacks
+
+## AWS Firewall Managers
+Manage all rules in all accounts of an AWS Org
+
+Sec Policy: Common Set of Rules 
+
+## Best Practicces - DDOS 
+
+BP1 - CloudFront - uses shield
+BP1 - Global Accelorator - uses shield 
+
+BP3 - Route53
+
+## GuardDuty 
+Machine Learning to detect abnormal hits
+Looks at CloudTrail Management Events, Event Logs, S3 Data Events, VPC Flow Logs, DNS Logs(Encoded data sent)
+Can protect you against CryptoCurrency Attacks
+
+can use event bridge to trigger lambda or SNS
+
+## Amazon Inspector
+Automated Security Assesments
+
+EC2, SSM Agent, looks for unintended network accessibility, looks at OS for vulns. 
+
+So this service only works with EC2, Container Images, and Lambda Functions - Finds CVEs, maps network reachabiity EC2
+
+## Macie 
+
+Data Security and data privacy service, alerts you if you have PII in a S3 Bucket. (Your blog post covers this)
+
+22/25 correct. 
